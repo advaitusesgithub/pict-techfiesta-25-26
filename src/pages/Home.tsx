@@ -7,7 +7,9 @@ import { ArrowLeft, PiggyBank, TrendingUp, Save, Sparkles, Compass, Github, Link
 import IncomePanel, { Income } from "@/components/IncomePanel";
 import ExpensePanel, { Expense } from "@/components/ExpensePanel";
 import WishlistPanel from "@/components/WishlistPanel";
+import LoanEligibilityForm, { LoanFormData } from "@/components/LoanEligibilityForm";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -15,6 +17,7 @@ export default function Home() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [savings, setSavings] = useState(0);
   const [tempSavings, setTempSavings] = useState("");
+  const [isCheckingEligibility, setIsCheckingEligibility] = useState(false);
 
   const totalIncome = incomes.reduce((s, i) => s + i.amount, 0);
   const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);
@@ -22,6 +25,21 @@ export default function Home() {
 
   const saveSavings = () => {
     setSavings(Number(tempSavings) || 0);
+  };
+
+  const handleCheckEligibility = async (data: LoanFormData) => {
+    setIsCheckingEligibility(true);
+    
+    // TODO: Connect to backend API
+    console.log("Loan eligibility data:", data);
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      setIsCheckingEligibility(false);
+      toast.success("Eligibility check complete!", {
+        description: "Backend integration pending. Check console for form data.",
+      });
+    }, 1500);
   };
 
   return (
@@ -73,7 +91,15 @@ export default function Home() {
             <Sparkles className="h-7 w-7 text-primary" />
             Financial Dashboard
           </h2>
-          <p className="text-muted-foreground mt-1">Manage your income, expenses, and plan your purchases</p>
+          <p className="text-muted-foreground mt-1">Check your loan eligibility and manage your finances</p>
+        </div>
+
+        {/* Loan Eligibility Form - Full Width */}
+        <div className="mb-8 animate-fade-up" style={{ animationDelay: "0.05s" }}>
+          <LoanEligibilityForm 
+            onCheckEligibility={handleCheckEligibility} 
+            isLoading={isCheckingEligibility} 
+          />
         </div>
 
         <div className="grid lg:grid-cols-12 gap-6">
